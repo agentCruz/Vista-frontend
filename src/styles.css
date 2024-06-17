@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  font-family: "Inter", sans-serif;
+}
+.cardBg{
+  background: linear-gradient(127.31deg, rgba(120, 86, 255, 0.93) 49.69%, rgba(109, 86, 199, 0.93) 121.19%);
+}
+
+.manrope{
+  font-family: "Manrope", sans-serif;
+  font-style: normal;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.checks:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  display: inline-block;
+  width: 1px;
+  height: 30px; /* Adjust the height as needed */
+  border-left: 1px dashed #5977E559; /* Dotted line with color black */
+  top: 35px;
+  margin-right: 180px;
+  transform: translateX(-50%); /* Center it horizontally */
+}
+
+
+.ant-switch.ant-switch-checked {
+  background: rgb(85, 197, 85);
+}
+.ant-switch.ant-switch-checked:hover {
+  background: rgb(85, 197, 85) !important;
+}
+
+
+.ant-drawer-body::-webkit-scrollbar-track {
+  background: transparent; /* Transparent background for track */
+    border-radius: 10px; /* Rounded corners for track */
+}
+
+.ant-drawer-body::-webkit-scrollbar-thumb {
+  border-radius: 10px; /* Rounded corners for thumb */
+  background: #ddd; /* Light gray background for thumb */
+  border: 2px solid transparent; /* Transparent border to create padding effect */
+  background-clip: padding-box; /* Clip the background to the padding box */
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5); /* Subtle shadow for thumb */
+}
+
+.ant-drawer-body::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Loader.css */
+/* Loader.css */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-top-color: #7856FF;
+  animation: spin 1s linear infinite;
+}
+ 
+.ant-input-outlined:focus-within,.ant-input-outlined:hover{
+  border-color:inherit !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
