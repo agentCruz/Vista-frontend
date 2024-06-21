@@ -1,17 +1,16 @@
 import React from "react";
-import { recentTransactions } from "../../dataHelpers/MainDataHelper";
 import Transaction from "../Transaction";
+import { useAuthState } from "../../stores/auth.store";
 
 export const AllTransactions = (props) => {
+  const { transactions } = useAuthState();
+
   return (
     <div>
-      {recentTransactions.map((items) => (
+      {transactions.map((items) => (
         <Transaction
-          onClick={props.setDrawer}
-          name={items.name}
-          category={items.category}
-          amountSpent={items.amountSpent}
-          time={items.time}
+          onClick={() => props.setDrawer(items)}
+          item={items}
         />
       ))}
     </div>

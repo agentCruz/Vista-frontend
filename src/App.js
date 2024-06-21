@@ -4,10 +4,12 @@ import Main from './pages/Main';
 import Login from './pages/Login';
 import SignIn from './pages/SignIn';
 import PrivateRoute from './components/PrivateRoute'; // Adjust the import path as needed
+import useAuth from './hooks/auth.hook';
 export const network="localhost"
 
 export default function App() {
     const [drawer, setDrawer] = useState();
+    useAuth();
 
     return (
         <div>

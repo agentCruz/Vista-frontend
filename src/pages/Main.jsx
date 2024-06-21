@@ -7,7 +7,7 @@ import {
   IoClose,
 } from "react-icons/io5";
 import Transaction from "../components/Transaction";
-import { fetchUserData, recentTransactions } from "../dataHelpers/MainDataHelper";
+import { recentTransactions } from "../dataHelpers/MainDataHelper";
 import { Drawer } from "antd";
 import { Transfer } from "../components/Drawers/Transfer";
 import { Request } from "../components/Drawers/Request";
@@ -19,6 +19,9 @@ import { TransactionDetails } from "../components/TransactionDetails";
 import { Account } from "../components/Drawers/Account";
 import VerticalScrollList from "../components/OverflowDrawer";
 import { Tips } from "../components/Tips";
+import { useAuthState } from "../stores/auth.store";
+import useAuth from "../hooks/auth.hook";
+import { useNavigate } from "react-router-dom";
 
 export default function Main() {
   const getObjects = recentTransactions.slice(-2);
@@ -27,23 +30,28 @@ export default function Main() {
   const [drawerName, setDrawerName] = useState();
   const [drawer, setDrawer] = useState(<Transfer />);
 
-  useEffect(()=>{
-    fetchUserData()
-    .then(userData => {
-       setUsername(userData.username);
-        console.log('Username:', username);
-        // Handle username as needed
-    })
-    .catch(error => {
-        console.error('Failed to fetch user data:', error.message);
-        // Handle error
-    });
-  })
-  
+  const { user, balance, transactions } = useAuthState();
+  const { signOut } = useAuth();
+
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   fetchUserData()
+  //     .then((userData) => {
+  //       setUsername(userData.username);
+  //       console.log("Username:", username);
+  //       // Handle username as needed
+  //     })
+  //     .catch((error) => {
+  //       console.error("Failed to fetch user data:", error.message);
+  //       // Handle error
+  //     });
+  // });
+
   const onClose = () => {
     setOpen(false);
   };
-  
+
   const openTransfer = () => {
     setOpen(true);
     setDrawer(<Transfer close={onClose} />);
@@ -60,32 +68,60 @@ export default function Main() {
     setDrawerName("Notifications");
   };
 
-  const transactionDetails = () => {
+  const transactionDetails = (item) => {
     setOpen(true);
     setDrawerName("Transaction details");
-    setDrawer(<TransactionDetails />);
+    setDrawer(<TransactionDetails item={item} />);
   };
+
   const openHistory = () => {
     setOpen(true);
     setDrawerName("Recent Transactions");
-    setDrawer(<AllTransactions setDrawer={transactionDetails} />);
+    setDrawer(<AllTransactions setDrawer={(item) => transactionDetails(item)} />);
   };
-  const tipsOptions=[
-    {id:1,background:"#D8FF6F",title:"Supercharge your business",subtext:"Accept payments with our NFC-enabled infrastructure."},
-    {id:2,background:"#D7E5FF",title:"Pay instantly with Quick Debit",subtext:"Enable Quick Debit for an even faster payment session."},
-    {id:3,background:"#F1DC91",title:"Lightning fast finance ",subtext:"Learn how NFC technology is faster and much safer."},
-  ]
+  
+  const tipsOptions = [
+    {
+      id: 1,
+      background: "#D8FF6F",
+      title: "Supercharge your business",
+      subtext: "Accept payments with our NFC-enabled infrastructure.",
+    },
+    {
+      id: 2,
+      background: "#D7E5FF",
+      title: "Pay instantly with Quick Debit",
+      subtext: "Enable Quick Debit for an even faster payment session.",
+    },
+    {
+      id: 3,
+      background: "#F1DC91",
+      title: "Lightning fast finance ",
+      subtext: "Learn how NFC technology is faster and much safer.",
+    },
+  ];
   return (
     <section className="p-6 mx-auto max-w-[600px] shadow-sm bg-[#FBFAFF]">
       {/* Header section */}
       <NFCReader />
       <div className="flex items-center justify-between text-[#2E3A59]">
-        <div onClick={()=>{setDrawer(<Account />); setOpen(true) } } className="flex items-center gap-2 border rounded-[18px] p-4 ">
+        <div
+          onClick={() => {
+            setDrawer(<Account />);
+            setOpen(true);
+          }}
+          className="flex items-center gap-2 border rounded-[18px] p-4 "
+        >
           <IoPersonOutline />
           <p className="text-[#2E3A59] font-medium text-sm">{username}</p>
         </div>
         <div className="flex items-center gap-4 text-xl">
-          <div className=" cursor-pointer">
+          <div
+            className=" cursor-pointer"
+            onClick={() => {
+              signOut().then(navigate("/sign-in"));
+            }}
+          >
             <IoSettingsOutline />
           </div>
           <div onClick={openNotifications} className="cursor-pointer">
@@ -97,7 +133,7 @@ export default function Main() {
       <div className="text-white cardBg rounded-xl py-6 mt-6">
         <span className="flex items-center place-content-center font-semibold text-[35px] gap-1">
           <h1 className="text-[#4A33A8]">₦</h1>
-          <h1 className="">12,950</h1>
+          <h1 className="">{balance ? balance.amount : 0}</h1>
         </span>
         <section className="flex items-center gap-6 justify-around mt-6">
           {/* Request */}
@@ -137,33 +173,32 @@ export default function Main() {
           </button>
         </div>
         <div className="">
-          {getObjects.map((item, index) => (
+          {transactions.map((item, index) => (
             <div key={index}>
               <Transaction
-                onClick={transactionDetails}
-                time={item.time}
-                name={item.name}
-                amountSpent={item.amountSpent}
-                category={item.category}
+                onClick={() => transactionDetails(item)}
+                item={item}
               />
             </div>
           ))}
         </div>
       </section>
-        <section className="mt-[16px]">
+      <section className="mt-[16px]">
         <VerticalScrollList />
-        </section>
-        <section className="mt-[16px]">
-          <h1 className="mt-5 mb-3 text-[14px] text-[#2E3A59] ml-[12px] font-[500]">Tips and more</h1>
-          {tipsOptions.map((item)=>(
-            <Tips
+      </section>
+      <section className="mt-[16px]">
+        <h1 className="mt-5 mb-3 text-[14px] text-[#2E3A59] ml-[12px] font-[500]">
+          Tips and more
+        </h1>
+        {tipsOptions.map((item) => (
+          <Tips
             background={item.background}
             key={item.id}
             title={item.title}
             subtext={item.subtext}
-            />
-          ))}
-        </section>
+          />
+        ))}
+      </section>
       <Drawer
         width="50vw"
         height="80vh"

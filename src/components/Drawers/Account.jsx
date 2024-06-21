@@ -6,8 +6,10 @@ import { GoBell } from 'react-icons/go';
 import { IoCallOutline, IoLockClosedOutline, IoMailOutline } from 'react-icons/io5'
 import { LuEye } from 'react-icons/lu';
 import { MdOutlineAlternateEmail } from 'react-icons/md';
+import { useAuthState } from '../../stores/auth.store';
 
 export const Account = () => {
+    const { user } = useAuthState();
     const onChange = (checked) => {
         console.log(`switch to ${checked}`);
       };
@@ -17,7 +19,7 @@ export const Account = () => {
             <div className='text-[#7856FF] min-w-[30px] border-[#5977E51A] border-opacity-10 text-opacity-30 border w-[30px] h-[30px] rounded-[8px] flex justify-center items-center'>
                 <p>#</p>
             </div>   
-            <p className='text-[14px] text-[#8391A1]'>AU202100684</p>
+            <p className='text-[14px] text-[#8391A1]'>{user ? user?.account : ''}</p>
         </div>
         {/* Number */}
         <div className='flex items-center justify-start px-[16px] border-[#DADADA80] border-opacity-50 border h-[56px] rounded-[10px] gap-4'>
@@ -25,7 +27,7 @@ export const Account = () => {
             <IoCallOutline />
             </div>  
             <div className='w-auto'>
-                <Input addonBefore="+234" type='number' disabled={true} />
+                <Input addonBefore="+234" type='number'  disabled={true} />
             </div> 
             <p className='underline text-[#5977E5] text-[11px] font-bold'>Edit</p>
         </div>
@@ -34,7 +36,7 @@ export const Account = () => {
             <div className='text-[#7856FF] min-w-[30px] border-[#5977E51A] border-opacity-10 text-opacity-30 border w-[30px] h-[30px] rounded-[8px] flex justify-center items-center'>
                 <IoMailOutline />
             </div>   
-            <p className='text-[14px] text-[#8391A1] w-auto'>Danladi.ogunle@augustineuniversity.edu.ng</p>
+            <p className='text-[14px] text-[#8391A1] w-auto'>{user ? user.email : '' }</p>
         </div>
         {/* Password */}
         <div className='flex items-center justify-start px-[16px] overflow-clip bg-[#F7F8F9] border-[#DADADA80] border-opacity-50 border h-[56px] rounded-[10px] gap-4'>
