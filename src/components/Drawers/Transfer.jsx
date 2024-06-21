@@ -107,7 +107,7 @@ export const Transfer = (props) => {
     const trxn = {
       id: "",
       senderId: user.id,
-      senderName: user.firstName,
+      senderName: user.userName,
       receiverId: accountDetail.id,
       receiverName: accountDetail.userName,
       amount,
